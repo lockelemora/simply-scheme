@@ -1,0 +1,78 @@
+;Chapter 14 completion
+;14.8
+
+(define (repeat times wd)
+  (if (= times 0)
+      '()
+      (se wd (repeat (- times 1) wd))))
+  
+ 
+(define (expand sent)
+  (if (empty? sent)
+      '()
+      (if (number? (first sent))
+          (se (repeat (- (first sent) 1) (first (bf sent))) (expand (bf sent)))
+          (se (first sent) (expand (bf sent))))))
+
+
+(expand '(4 calling birds 3 french hens))
+
+;14.9
+
+(define (location-helper n wd sent)
+  (if (empty? sent)
+     #f
+     (if (equal? wd (first sent))
+         n
+         (location-helper (+ n 1) wd (bf sent)))))
+
+
+(define (location wd sent)
+  (location-helper 1 wd sent))
+
+(location 'me '(you never give me your money))
+
+
+;14.12
+
+(define (square n)
+  (* n n))
+
+(define (progressive-squares? sent)
+  (if (= (count sent) 1)
+      #t
+  (if (= (first (bf sent)) (square (first sent)))
+      (progressive-squares? (bf sent))
+      #f)))
+
+(progressive-squares? '(3 9 81 6561))
+(progressive-squares? '(25 36 49 64))
+
+;14.13
+
+(define (same-shape? sent1 sent2)
+  (if (empty? sent1)
+      #t
+      (if (and (= (count sent1) (count sent2))
+               (= (count (first sent1)) (count (first sent2))))
+          (same-shape? (bf sent1) (bf sent2))
+          #f)))
+
+(same-shape? '(the fool on the hill) '(you like me too much))
+(same-shape? '(the fool on the hill) '(and your bird can sing))
+
+;14.15
+
+(define (merge sent1 sent2)
+  (cond ((and (empty? sent1) (empty? sent2)) '())
+        ((empty? sent1) (se sent2))
+        ((empty? sent2) (se sent1))
+        (else
+         (if (< (first sent1) (first sent2))
+          (se (first sent1) (merge (bf sent1) sent2))
+          (se (first sent2) (merge sent1 (bf sent2)))))))
+      
+
+(merge '(4 7 18 40 99) '(3 6 9 12 24 36 50))
+
+;14.16
