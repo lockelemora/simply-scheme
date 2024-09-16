@@ -1,0 +1,102 @@
+;Project: Spelling Names of Huge Numbers
+
+;Marking rules
+(define quantities '(thousand million billion trillion quadrillion))
+
+(define (ones n)
+  (cond ((= n 9) 'nine)
+        ((= n 8) 'eight)
+        ((= n 7) 'seven)
+        ((= n 6) 'six)
+        ((= n 5) 'five)
+        ((= n 4) 'four)
+        ((= n 3) 'three)
+        ((= n 2) 'two)
+        (else 'one)))
+
+(define (tens n)
+  (cond ((= n 9) 'ninety)
+        ((= n 8) 'eighty)
+        ((= n 7) 'seventy)
+        ((= n 6) 'sixty)
+        ((= n 5) 'fifty)
+        ((= n 4) 'fourty)
+        ((= n 3) 'thirty)
+        ((= n 2) 'twenty)
+        (else 'ten)))
+
+(define (hundreds n)
+  (se (ones n) 'hundred))
+
+(define (teen? n)
+  (and (> n 10) (< n 20)))
+
+(define (teen n)
+  (cond ((= n 19) 'nineteen)
+        ((= n 18) 'eighteen)
+        ((= n 17) 'seventeen)
+        ((= n 16) 'sixteen)
+        ((= n 15) 'fifteen)
+        ((= n 14) 'fourteen)
+        ((= n 13) 'thirteen)
+        ((= n 12) 'twelve)
+        (else 'eleven)))  
+
+;Get last three digits in a number
+(define (last-three n)
+  (word (last (bl (bl n))) (last (bl n)) (last n)))
+
+(last-three 564321)
+
+
+;Part bigger number into groups of 3-digit numbers
+(define (groups-of-three n)
+  (if (<= (count n) 3)
+      (se n)
+      (se (groups-of-three (bl (bl (bl n)))) (last-three n))))
+
+;Translation main function
+(define (translator n)
+  (cond ((= (count n) 1)
+         (ones n))
+        ((and (= (count n) 2) (teen? n))
+         (teen n))
+        ((= (count n) 2)
+         (se (tens (first n)) (ones (last n))))
+        ((and (= (count n) 3) (teen? (bf n)))
+         (se (hundreds (first n)) (teen (bf n))))
+        (else (se (hundreds (first n)) (tens (first (bf n))) (ones (last n))))))
+
+
+
+(groups-of-three 12345678)
+(number? (first (last-three 124324434431)))
+
+
+;decorator i=0
+(define (decorator sent i)
+  (if (= (count sent) 1)
+      '()
+      (se (item (+ i 1) quantities) (decorator (bf sent) (+ i 1)))))
+
+(count '(123 123 432))
+(decorator '(3 325) 0)
+
+;final function
+(define (number-name n)
+  (every translator (groups-of-three n)))
+
+
+;final function lambda
+(define (number-name-l n)
+  (every (lambda (sent) (translator sent)) (groups-of-three n)))
+
+
+
+(decorator (groups-of-three 37325) 0)
+
+
+
+
+(number-name 3371325)
+(number-name-l 3371325)
