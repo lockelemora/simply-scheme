@@ -1,4 +1,4 @@
-(define poker-hand '(s2 s3 sa s4))
+(define poker-hand '(s2 s2 s2 s3))
 
 
 ;Card values
@@ -62,16 +62,33 @@
   (count (keep (lambda (x) (= (bf card) (bf x))) hand)))
 
 '(card-counter)
-(card-counter '2s poker-hand)
+(card-counter 's2 (final-hand poker-hand))
 
-; four
-(define (four-hand hand)
-  (if (= (card-counter (first hand) hand) 4)
-      #t
-      (card-counter (first (bf hand)) (first (bf hand)))))
+; three
+(define (three-hand hand)
+  (if (<= (count hand) 1)
+      #f
+      (cond ((=
+      (if (= (card-counter (first (final-hand hand)) (final-hand hand)) 3)
+          #t
+          (three-hand (bf hand)))))
 
-'(four-hand)
-(four-hand poker-hand)
+'(three-hand)
+(three-hand poker-hand)
+
+; two
+(define (two-hand hand)
+  (if (<= (count hand) 1)
+      #f
+      (if (= (card-counter (first (final-hand hand)) (final-hand hand)) 2)
+          #t
+          (two-hand (bf hand)))))
+
+'(two-hand)
+(two-hand poker-hand)
+          
+
+
 
 
 
