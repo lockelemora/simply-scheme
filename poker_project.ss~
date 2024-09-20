@@ -26,14 +26,12 @@
 (define (final-hand hand)
   (sort-hand (convert-card hand)))
 
-'(final-hand)
 (final-hand poker-hand)
 
 ;numbers-hand
 (define (numbers-hand hand)
   (every bf (final-hand hand)))
 
-'(numbers-hand)
 (numbers-hand poker-hand)
 
 
@@ -46,7 +44,6 @@
           (and #t (straight-hand? (bf hand)))
           #f))))
 
-'(straight-hand?)
 (straight-hand? (final-hand poker-hand))
 
 ;Color
@@ -54,24 +51,10 @@
   (if (= (count hand) (count (keep (lambda (x) (equal? (first (first hand)) (first x))) hand)))
       #t
       #f))
-'(color-hand?)
+
+;Full house
+(define (full-house? hand)
+  
+
 (color-hand? (final-hand poker-hand))
-
-;Card-counter (needs numbers-hand)
-(define (card-counter card hand)
-  (count (keep (lambda (x) (= (bf card) (bf x))) hand)))
-
-'(card-counter)
-(card-counter '2s poker-hand)
-
-; four
-(define (four-hand hand)
-  (if (= (card-counter (first hand) hand) 4)
-      #t
-      (card-counter (first (bf hand)) (first (bf hand)))))
-
-'(four-hand)
-(four-hand poker-hand)
-
-
 
